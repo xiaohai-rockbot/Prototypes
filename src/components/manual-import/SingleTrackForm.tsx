@@ -2,18 +2,12 @@ import { useState, useRef } from 'react';
 import {
   Upload, Music, Play, Pause, CheckCircle2, XCircle, AlertTriangle, Info
 } from 'lucide-react';
-import { Listbox } from '@headlessui/react';
-import { ChevronDown, Check } from 'lucide-react';
 import { detectDuration, isSupportedAudioFile, isNonMp3Audio, SUPPORTED_AUDIO_ACCEPT } from '../../utils/audioUtils';
 import { validateISRC } from '../../utils/isrcValidation';
 import { formatDuration } from '../../utils/formatters';
 import { Spinner } from '../shared/Spinner';
 import { AlbumArtDropZone } from './AlbumArtDropZone';
 
-const genres = [
-  'Electronic', 'Pop', 'Alternative Rock', 'Indie', 'Folk',
-  'R&B', 'Hip-Hop', 'Jazz', 'Classical', 'Country',
-];
 
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -37,7 +31,7 @@ export function SingleTrackForm() {
   const [artist, setArtist] = useState('');
   const [album, setAlbum] = useState('');
   const [label, setLabel] = useState('');
-  const [genre, setGenre] = useState('Pop');
+  const [genre, setGenre] = useState('');
   const [releaseDate, setReleaseDate] = useState('');
   const [explicit, setExplicit] = useState(false);
 
@@ -116,7 +110,7 @@ export function SingleTrackForm() {
     setAlbumArt(null);
     setAlbumArtUrl(null);
     setTitle(''); setArtist(''); setAlbum(''); setLabel('');
-    setGenre('Pop'); setReleaseDate(''); setExplicit(false);
+    setGenre(''); setReleaseDate(''); setExplicit(false);
     setUpc(''); setIsrc(''); setIsrcTouched(false);
     setSubmitState('idle');
   }
@@ -303,32 +297,12 @@ export function SingleTrackForm() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Genre</label>
-              <Listbox value={genre} onChange={setGenre}>
-                <div className="relative">
-                  <Listbox.Button className="flex items-center justify-between w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 bg-white hover:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500">
-                    <span>{genre}</span>
-                    <ChevronDown size={14} className="text-gray-400" />
-                  </Listbox.Button>
-                  <Listbox.Options className="absolute mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-10 py-1 focus:outline-none max-h-40 overflow-y-auto">
-                    {genres.map(g => (
-                      <Listbox.Option
-                        key={g}
-                        value={g}
-                        className={({ active }) =>
-                          `flex items-center justify-between px-3 py-2 text-sm cursor-pointer ${active ? 'bg-brand-50 text-brand-700' : 'text-gray-700'}`
-                        }
-                      >
-                        {({ selected }) => (
-                          <>
-                            <span>{g}</span>
-                            {selected && <Check size={14} className="text-brand-500" />}
-                          </>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </div>
-              </Listbox>
+              <input
+                value={genre}
+                onChange={e => setGenre(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                placeholder="e.g. Electronic, Pop, Folk…"
+              />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Release Date</label>
